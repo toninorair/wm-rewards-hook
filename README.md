@@ -1,17 +1,30 @@
-## Foundry
+## Smart $M + Uniswap V4 Rewards Distribution Hook
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Smart $M (or Wrapped M) is next-gen wrapper contract for the $M cryptodollar. This wrapper maintains a 1:1 rate with $M and offers integrators unprecedented control over yield in DeFi protocols.
 
-Foundry consists of:
+**M^0 repositories**:
+- [$M](https://github.com/m0-foundation/protocol/blob/main/src/MToken.sol)
+- [Smart $M(Wrapped $M)](https://github.com/m0-foundation/wrapped-m-token/blob/main/src/WrappedMToken.sol)
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+** Uniswap V4 hook idea **
+Even though Smart $M allows for earners/protocols to accrue yied, the secondary distribution of such rewards between LP providers and users remains challenging.
 
-## Documentation
+Rewards hook simplifies such logic by reliably tracking and claiming rewards by LPs:
+- after liquidity was added
+- after liqudiity was removed
 
-https://book.getfoundry.sh/
+Additionally, after the pool was initialized, `PoolManager` starts accruing wM rewards.
+
+For calculations of rewards standard shares based staking algorithm is used (multiplier scaling is omitted for simplicity):
+
+```
+rewardIndex += reward / totalLiquidity;
+lpRewards = lpliquidity * (rewardIndex - lpRewardIndex)
+```
+
+**Architecture components**
+
+<img width="900" alt="Screenshot 2024-09-16 at 10 46 49 PM" src="https://github.com/user-attachments/assets/869350fa-de6c-4700-99f4-b035754ae2a0">
 
 ## Usage
 
@@ -25,42 +38,4 @@ $ forge build
 
 ```shell
 $ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
 ```
